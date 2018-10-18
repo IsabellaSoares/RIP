@@ -14,12 +14,14 @@ import java.util.List;
  */
 public class Message {
     private int sourceID;
-    private int destID;
+    //private int destID;
     private int[] minCost = new int[4];
 
-    public Message(int sourceID, int destID, int[] minCost){
+    public Message() {}    
+    
+    public Message(int sourceID, int[] minCost){
         this.sourceID = sourceID;
-        this.destID = destID;
+//        this.destID = destID;
         this.minCost = minCost;
     }
 
@@ -31,13 +33,13 @@ public class Message {
         this.sourceID = sourceID;
     }
 
-    public int getDestID() {
-        return destID;
-    }
-
-    public void setDestID(int destID) {
-        this.destID = destID;
-    }
+//    public int getDestID() {
+//        return destID;
+//    }
+//
+//    public void setDestID(int destID) {
+//        this.destID = destID;
+//    }
 
     public int[] getMinCost() {
         return minCost;

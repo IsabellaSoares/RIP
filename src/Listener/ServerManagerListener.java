@@ -14,5 +14,5 @@ import Model.Message;
  */
 public interface ServerManagerListener {
     void messageReceived(Message message);
-    void ACKReceived(ACK ack);
+//    void ACKReceived(ACK ack);
 }

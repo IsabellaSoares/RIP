@@ -17,7 +17,7 @@ public class Node3 {
         int table[][] = {{7, 999, 999, 999}, {999, 999, 999, 999}, {999, 999, 2, 999}, {999, 999, 999, 0}};
         
         Process p = new Process();
-        p.exec(3, serverPort, connectionPorts, table);
+        p.exec(3, serverPort, connectionPorts, table, costs);
         //exec(pid do processo, porta do servidor, vetor de conexões)
     }
 }

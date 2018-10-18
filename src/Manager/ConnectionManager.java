@@ -32,11 +32,13 @@ public class ConnectionManager {
         this.server.setServerListener(new ServerListener() {
             @Override
             public void receivePacket(String json) {
-                if(Convert.isACK(json)){
-                    serverManagerListener.ACKReceived(Convert.JsonToACK(json));
-                } else {
-                    serverManagerListener.messageReceived(Convert.JsonToMessage(json));
-                }
+                serverManagerListener.messageReceived(Convert.JsonToMessage(json));
+                
+//                if(Convert.isACK(json)){
+//                    serverManagerListener.ACKReceived(Convert.JsonToACK(json));
+//                } else {
+//                    serverManagerListener.messageReceived(Convert.JsonToMessage(json));
+//                }
             }
         });
     }
@@ -55,10 +57,10 @@ public class ConnectionManager {
         client.outToServer(Convert.MessageToJson(message));
     }
     
-    //Envia ACK para o servidor
-    public void sendACKToServer(ACK ack) throws Exception{
-        client.outToServer(Convert.ACKToJson(ack));
-    }
+//    //Envia ACK para o servidor
+//    public void sendACKToServer(ACK ack) throws Exception{
+//        client.outToServer(Convert.ACKToJson(ack));
+//    }
     
     //Encerra o processo e fecha as conexões
     public void close(){
