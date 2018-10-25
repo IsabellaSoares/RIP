@@ -5,7 +5,6 @@
  */
 package Tools;
 
-import Model.ACK;
 import Model.Message;
 
 /**
@@ -16,14 +15,20 @@ public class Convert {
     
     public static String MessageToJson(Message message){
         int[] minCost = message.getMinCost();
-        String json = message.getSourceID()+"|"+minCost[0]+"|"+minCost[1]+"|"+minCost[2]+"|"+minCost[3];
+        String json = Integer.toString(message.getSourceID())+"|"+Integer.toString(minCost[0])+"|"+Integer.toString(minCost[1])+"|"+Integer.toString(minCost[2])+"|"+Integer.toString(minCost[3])+"|";
+        System.out.println(json);
         return json;
     }
     
     //Obtém o Id da mensagem e seu clock
     public static Message JsonToMessage(String json){
-        String[] str = json.split("|");        
+        String[] str = json.split("|");
+        System.out.println("JSON: "+json);
+        System.out.print(str[2]+" "+str[4]+" "+str[6]+" "+str[8]);
         int[] minCost = {Integer.parseInt(str[2]), Integer.parseInt(str[4]), Integer.parseInt(str[6]), Integer.parseInt(str[8])};
+        for (int i = 0; i < minCost.length; i++) {
+            System.out.println(minCost[i]);
+        }
         Message message = new Message();
         
         message.setSourceID(Integer.parseInt(str[0]));
@@ -31,29 +36,4 @@ public class Convert {
                 
         return message;
     }
-    
-//    //Cria a mensagem de ACK
-//    public static String ACKToJson(ACK ack){
-//        String json = ack.getId()+"|"+ack.getTime()+"|"+ack.getProcess();
-//        return json;
-//    }
-//    
-//    //Obtém Id, clock e processo que enviou o ACK
-//    public static ACK JsonToACK(String json){
-//        String[] str = json.split("|");
-//        ACK ack = new ACK();
-//        ack.setId(str[0]);
-//        ack.setTime(Integer.parseInt(str[2]));
-//        ack.setProcess(Integer.parseInt(str[4]));
-//        return ack;
-//    }
-//    
-//    //Identifica se é uma mensagem de ACK
-//    public static boolean isACK(String json){
-//        String[] str = json.split("|");
-//        if(str.length>3){
-//            return true;
-//        }
-//        return false;
-//    }
 }

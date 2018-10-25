@@ -8,7 +8,6 @@ package Manager;
 import Tools.Convert;
 import Listener.ServerListener;
 import Listener.ServerManagerListener;
-import Model.ACK;
 import Connection.Client;
 import Model.Message;
 import Connection.Server;
@@ -21,6 +20,7 @@ public class ConnectionManager {
     private Client client = null;
     private Server server;
     private ServerManagerListener serverManagerListener;
+    private boolean updating = false;
     
     public ConnectionManager(int serverPort){
         //Cria cliente
@@ -69,5 +69,13 @@ public class ConnectionManager {
             this.server.close();
         } catch (Exception e) {
         }
+    }
+
+    public void setUpdating (boolean updating) {
+        this.updating = updating;
+    }
+    
+    public boolean getUpdating () {
+        return updating;
     }
 }

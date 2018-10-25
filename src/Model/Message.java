@@ -5,16 +5,12 @@
  */
 package Model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  *
  * @author Marcelo
  */
 public class Message {
     private int sourceID;
-    //private int destID;
     private int[] minCost = new int[4];
 
     public Message() {}    
@@ -32,14 +28,6 @@ public class Message {
     public void setSourceID(int sourceID) {
         this.sourceID = sourceID;
     }
-
-//    public int getDestID() {
-//        return destID;
-//    }
-//
-//    public void setDestID(int destID) {
-//        this.destID = destID;
-//    }
 
     public int[] getMinCost() {
         return minCost;

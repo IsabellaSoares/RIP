@@ -7,14 +7,8 @@ package Process;
 
 import Listener.ServerManagerListener;
 import Manager.ConnectionManager;
-import Model.ACK;
-import Model.Estrutura;
 import Model.Message;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -22,12 +16,11 @@ import java.util.logging.Logger;
  */
 public class Process {
     private static boolean updated = false;
-    
-    public void exec(int pid, int serverPort, int[] connectionPorts, int[][] table, int[] costs) {
+        
+    public void exec(int pid, int serverPort, int[] connectionPorts, int[][] table, int[] costs) throws InterruptedException {
         
         Scanner keyboard = new Scanner(System.in);
-        List<Estrutura> messageList = new ArrayList<Estrutura>(); //Lista de mensagens
-                
+                       
         ConnectionManager manager = new ConnectionManager(serverPort); //Gerenciador de conexão
         
         manager.setServerManagerListener(new ServerManagerListener() {
@@ -35,15 +28,29 @@ public class Process {
             public void messageReceived(Message message) {
                 // recebeu uma mensagem
                 System.out.println("\n[Log] Recebeu o vetor de custo mínimo do nó " + message.getSourceID());
-                tableUpdate(costs, table, message);
+                
+                while (manager.getUpdating() == true) {}
+                manager.setUpdating(true);
+                updated = tableUpdate(costs, table, message);
+                manager.setUpdating(false);
+                
+                if (updated) {
+                    updated = false;
+                    
+                    try {
+                        Message msg = new Message(pid, costs);
+                        manager.sendMessageToServer(msg);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
             }
         });
         
         //Inicia o servidor do processo e aguarda que todos os outros processos sejam iniciados
         System.out.println("Iniciou nó "+pid+" na porta "+serverPort);
         System.out.print("Pressione 1 para iniciar as conexões:\n>> ");
-        keyboard.next();
-        keyboard.nextLine();
+        keyboard.nextInt();
         
         //Cria conexão com os outros processos e com ele mesmo
         for (int i = 0; i < connectionPorts.length; i++) {
@@ -52,23 +59,19 @@ public class Process {
         }
         
         System.out.println("Inicializando a tabela de distâncias do nó "+pid);
-        System.out.print("Pressione 1 para iniciar a atualização das tabelas de distância:\n>>");
+        System.out.print("Pressione 1 para iniciar a atualização das tabelas de distância:\n>> ");
         
-        int option = 0;
+        int option = keyboard.nextInt();
         
-        do {
-            option = keyboard.nextInt();
-            
-            if (option != 0) {
-                try {
-                    Message msg = new Message(pid, costs);
-                    manager.sendMessageToServer(msg);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        } while (option != 0);
+        try {
+            Message msg = new Message(pid, costs);
+            manager.sendMessageToServer(msg);
+            keyboard.nextInt();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         
+        printdt(table);
         manager.close();
         return;
     }
@@ -83,7 +86,7 @@ public class Process {
         }
     }
     
-    private synchronized static void tableUpdate (int[] destCosts, int[][] destTable, Message msg) {
+    private synchronized static boolean tableUpdate (int[] destCosts, int[][] destTable, Message msg) {
         int i = 0;
         int[] sourceCosts = msg.getMinCost();
         int sourceID = 0;
@@ -109,8 +112,12 @@ public class Process {
         }
         
         if (updated) {
-            System.out.println("A tabela do nó "+destID+" foi alterada");
+            System.out.println("A tabela do nó "+destID+" foi alterada.");
             printdt(destTable);
+        } else {
+            System.out.println("A tabela do nó "+destID+" não foi alterada.");
         }
+        
+        return updated;
     }            
 }
