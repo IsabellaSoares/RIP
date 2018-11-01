@@ -6,8 +6,6 @@
 package Manager;
 
 import Model.Message;
-//import Model.Structure;
-//import static Process.Process.clock;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,15 +35,15 @@ public class MessageManager {
     }
     
     public Message getMessage () {
-        return messageList.get(0);
+        if (messageList.isEmpty()) {
+            return null;
+        } else {
+            return messageList.get(0);
+        }
     }
     
     public boolean isEmpty () {
-        if (messageList.isEmpty()) {
-            return true;
-        } else {
-            return false;
-        }
+        return messageList.isEmpty();
     }
     
     public void remove () {

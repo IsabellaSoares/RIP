@@ -14,15 +14,16 @@ import java.util.Scanner;
  *
  * @author Marcelo
  */
-public class Node0 {
+public class Node2 {
     
-    static int nodeID = 0;
-
+    static int nodeID = 2;
+    
     public static void main(String[] args) throws InterruptedException {
         Scanner keyboard = new Scanner(System.in);
-        int serverPort = 2000;
-        int[] connectionPorts = {2001, 2002, 2003};
-        int[] costs = {0, 1, 3, 7};
+        int serverPort = 2002;
+        int[] connectionPorts = {2000, 2001, 2003};
+        int[] costs = {3, 1, 0, 2};
+//        int table[][] = {{3, 999, 999, 999}, {999, 1, 999, 999}, {999, 999, 0, 999}, {999, 999, 999, 2}};
         MessageManager msgManager = new MessageManager(nodeID);
         
         ConnectionManager manager = new ConnectionManager(serverPort);
@@ -54,7 +55,7 @@ public class Node0 {
             }
         });
         
-        System.out.println("Iniciou nó 0 na porta "+serverPort);
+        System.out.println("Iniciou nó 2 na porta "+serverPort);
         System.out.print("Pressione 1 para iniciar as conexões:\n>> ");
         keyboard.nextInt();
      
@@ -63,25 +64,13 @@ public class Node0 {
             System.out.println("Criou conexão com o nó "+ (connectionPorts[i] % 2000));
         }
         
-        System.out.println("Inicializando a tabela de distâncias do nó 0.");
+        System.out.println("Inicializando a tabela de distâncias do nó 2.");
         System.out.print("Pressione 1 para iniciar a atualização das tabelas de distância:\n>> ");
         
         keyboard.nextInt();
-        
-        try {
-            Message msg = new Message(0, costs);
-            manager.sendMessageToServer(msg);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        
-        try{
-            Thread.sleep(5000);
-        }catch(Exception e){
-            System.out.println("Deu erro!");
-        }
 
         System.out.println("["+costs[0]+" "+costs[1]+" "+costs[2]+" "+costs[3]+"]");
+        
         manager.close();
     }
     
@@ -90,11 +79,11 @@ public class Node0 {
         int sourceID = msg.getSourceID();
         boolean up = false;
         
-        for (int i = 0; i < destCosts.length; i++) {            
-           if ((sourceCosts[i] != 0) && (destCosts[i] != 0)) {
+        for (int i = 0; i < destCosts.length; i++) {
+            if ((sourceCosts[i] != 0) && (destCosts[i] != 0)) {
                 if ((sourceCosts[i]+destCosts[sourceID]) < destCosts[i]) {
                     up = true;
-                    destCosts[i] = sourceCosts[i] + destCosts[sourceID];                 
+                    destCosts[i] = sourceCosts[i] + destCosts[sourceID];                  
                 }
             }
         }
